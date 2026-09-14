@@ -2,31 +2,18 @@ workflows:
   android-apk:
     name: Inventory Maintenance Android APK
     max_build_duration: 60
-    instance_type: linux_x2
     environment:
       node: 22
       java: 17
-      groups:
-        - google_play
-      vars:
-        PACKAGE_NAME: com.alhwas.inventorymaintenance
     scripts:
       - name: Install dependencies
-        script: |
-          npm ci
+        script: npm ci
       - name: Generate Android project
-        script: |
-          npx expo prebuild --platform android --non-interactive
+        script: npx expo prebuild --platform android --non-interactive
       - name: Build release APK
         script: |
           cd android
+          chmod +x gradlew
           ./gradlew assembleRelease
     artifacts:
       - android/app/build/outputs/apk/release/app-release.apk
-    publishing:
-      email:
-        recipients:
-          - REPLACE_WITH_YOUR_EMAIL@example.com
-        notify:
-          success: true
-          failure: true
